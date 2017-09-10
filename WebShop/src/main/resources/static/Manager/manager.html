@@ -1,0 +1,28 @@
+<div class="container-fluid">
+	<header>
+		<nav class="navbar navbar-inverse">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" style="cursor:pointer" ng-click="view = ''">Manager page</a>
+				</div>
+
+				<ul class="nav navbar-nav">
+					<li><a style="cursor:pointer" ng-click="view = 'buyer-category'"><i class="fa fa-home"></i>
+							Buyer categories </a></li>
+					<li><a style="cursor:pointer" ng-click="view = 'product-category'"><i class="fa fa-shield"></i>
+							Product categories</a></li>
+					<li><a style="cursor:pointer" ng-click="view = 'action-sale'"><i class="fa fa-shield"></i>
+							Action sales</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a style="cursor:pointer" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+	<div ng-switch="view">
+		<div ng-switch-when="buyer-category"><div ng-include="'WebShop/Manager/buyer-category.html'"></div></div>
+		<div ng-switch-when="product-category"><div ng-include="'WebShop/Manager/product-category.html'"></div></div>
+		<div ng-switch-when="action-sale"><div ng-include="'WebShop/Manager/action-sale.html'"></div></div>
+	</div>
+</div>

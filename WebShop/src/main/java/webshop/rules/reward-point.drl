@@ -1,0 +1,32 @@
+package rules;
+
+import webshop.entity.Receipt;
+import webshop.entity.Profile;
+import webshop.entity.ConsumptionThreshold;
+import java.lang.Math;
+
+rule "Profile points acquiring"
+	when 
+		receipt: Receipt()
+		consumptionThreshold : ConsumptionThreshold(rangeFrom < receipt.finalPrize && rangeTo > receipt.finalPrize)
+	then
+		if(consumptionThreshold.getCalculusFunction().toString().equals('TOTAL_2_PERCENT')) {
+			receipt.setRewardPointsAcquired((int) Math.round(0.02 * receipt.getFinalPrize()));
+		}
+		else if(consumptionThreshold.getCalculusFunction().toString().equals('TOTAL_5_PERCENT')) {
+			receipt.setRewardPointsAcquired((int) Math.round(0.05 * receipt.getFinalPrize()));
+		}
+		else if(consumptionThreshold.getCalculusFunction().toString().equals('TOTAL_10_PERCENT')) {
+			receipt.setRewardPointsAcquired((int) Math.round(0.1 * receipt.getFinalPrize()));
+		}
+		else if(consumptionThreshold.getCalculusFunction().toString().equals('TOTAL_15_PERCENT')) {
+			receipt.setRewardPointsAcquired((int) Math.round(0.15 * receipt.getFinalPrize()));
+		}
+		else if(consumptionThreshold.getCalculusFunction().toString().equals('TOTAL_20_PERCENT')) {
+			receipt.setRewardPointsAcquired((int) Math.round(0.2 * receipt.getFinalPrize()));
+		}
+	end
+	
+
+		
+	

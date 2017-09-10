@@ -1,0 +1,51 @@
+<div ng-controller="receiptCtrl">
+
+	<div class="page-header">
+		<h1>Receipts</h1>
+	</div>
+
+	<h4>Filter by status:</h4>
+	<label class="radio-inline"><input type="radio" name="optradio"
+		ng-model="status" value="PENDING">Pending</label> <label
+		class="radio-inline"><input type="radio" name="optradio"
+		ng-model="status" value="DECLINED">Declined</label> <label
+		class="radio-inline"><input type="radio" name="optradio"
+		ng-model="status" value="REALIZED">Realized</label>
+
+	<div ng-repeat="receipt in receipts | filter: { state: status}">
+		<hr />
+		<h4>
+			<b>Receipt code: </b> {{receipt.code}}
+		</h4>
+		<h4>
+			<b>Receipt date: </b> {{receipt.date}}
+		</h4>
+		<h4>
+			<b>Original prize:</b> {{receipt.originalPrize}}
+		</h4>
+		<h4>
+			<b>Discount percentage:</b> {{receipt.discountPercentage}}
+		</h4>
+		<h4>
+			<b>Final prize:</b> {{receipt.finalPrize}}
+		</h4>
+		<h4>
+			<b>Reward points spent:</b> {{receipt.rewardPointsSpent}}
+		</h4>
+		<h4>
+			<b>Reward points acquired:</b> {{receipt.rewardPointsAcquired}}
+		</h4>
+		<h4>
+			<b>State:</b> {{receipt.state}}
+		</h4>
+
+
+		<div class="row" ng-show="receipt.state == 'PENDING'">
+			<button type="button" class="btn btn-success col-md-2"
+				ng-click="processReceipt(receipt)">Process receipt</button>
+			<button type="button" class="btn btn-danger col-md-2"
+				ng-click="declineReceipt(receipt)">Decline receipt</button>
+		</div>
+	</div>
+
+</div>

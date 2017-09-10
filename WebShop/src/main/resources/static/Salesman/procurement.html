@@ -1,0 +1,72 @@
+<div ng-controller="procurementCtrl">
+
+	<div class="page-header">
+		<h1>Procurements</h1>
+	</div>
+	
+	<div ng-repeat="product in products track by $index">
+		<div class="panel panel-success">
+			<div class="panel-heading">{{product.name}}</div>
+			<div class="panel-body">
+				<hr />
+				<h3>
+					<b>Code: </b> {{product.code}}
+				</h3>
+				<h3>
+					<b>Category: </b> {{product.category.name}}
+				</h3>
+				<h3>
+					<b>Prize: </b> {{product.prize}}
+				</h3>
+				<h3>
+					<b>Quantity: </b> {{product.quantity}}
+				</h3>
+				<h3>
+					<b>Minimum quantity: </b> {{product.minimumQuantity}}
+				</h3>
+				<div
+					ng-show="product.refillReason != null && product.refillReason != '' && product.refillReason !== undefined">
+					<h3>
+						<font size="5" color="red">Refill needed!</font>
+					</h3>
+					<h3>
+						<b>Reason: </b> {{product.refillReason}}
+					</h3>
+				</div>
+			</div>
+			<div class="panel-footer">
+				<div class="row">
+					<div class="form-group">
+						<div class="col-md-6">
+							<label for="amount" class="control-label"> Amount: </label> <input
+								type="number" min="1" max="1000000" class="form-control"
+								id="amount" ng-model="data.amounts[$index]"
+								ng-init="data.amounts[$index]=1">
+						</div>
+						<div class="col-md-6">
+							<button type="button" class="btn btn-success pull-right"
+								ng-click="setOrder(product, data.amounts[$index])" data-toggle="modal" data-target="#confirm-order">
+								Order products</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="modal fade" id="confirm-order" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body"> <strong>Are you sure?</strong></div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success pull-left btn-ok" ng-click="orderProduct()" data-dismiss="modal">Yes</button>
+					<button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</div>

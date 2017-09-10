@@ -1,0 +1,33 @@
+<div ng-controller="profileCtrl">
+
+	<div class="page-header">
+		<h1>My profile</h1>
+	</div>
+
+	<h3>
+		<b>Delivery address: </b> {{profile.deliveryAddress}}
+	</h3>
+	<h3>
+		<b>Reward points: </b> {{profile.rewardPoints}}
+	</h3>
+	<h3>
+		<b>Category: </b> {{profile.category.name}}
+	</h3>
+
+	<h3>
+		<b>Realized receipts: </b>
+	</h3>
+	<div ng-repeat="receipt in profile.realizedReceipts">
+		<hr />
+		<h3>
+			<b>Code: </b> {{receipt.code}}
+		</h3>
+		<h3>
+			<b>Date: </b> {{receipt.date}}
+		</h3>
+		<h3>
+			<b>Final prize: </b> {{receipt.finalPrize}}
+		</h3>
+	</div>
+
+</div>

@@ -1,0 +1,79 @@
+package rules;
+
+import java.util.Calendar
+import java.util.Date
+import java.text.SimpleDateFormat
+import webshop.entity.Receipt;
+import webshop.entity.ReceiptDiscount;
+import webshop.entity.Profile;
+import webshop.entity.ReceiptItem;
+
+function boolean checkDate2Years(String date, int numberOfDays) {
+	Calendar calendar = Calendar.getInstance(); 
+	calendar.add(Calendar.DAY_OF_MONTH, numberOfDays);
+	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	if(date != null && !sdf.parse(date).after(calendar.getTime())) {
+		return true;
+	}
+  	return false;
+}
+
+	
+rule "Receipt discount of 5%"
+	when 
+		receipt: Receipt(originalPrize > 200000)
+	then
+		receipt.addDiscount(new ReceiptDiscount(receipt.getCode() + receipt.getDiscounts().size(), receipt, 5.0, true));
+	end
+	
+rule "Receipt discount of 1% for 2 years of service"
+	when 
+		receipt: Receipt()
+		eval(checkDate2Years(receipt.getBuyer().getRegistrationDate(), -730))
+	then
+		receipt.addDiscount(new ReceiptDiscount(receipt.getCode() + receipt.getDiscounts().size(), receipt, 1.0, false));
+	end
+	
+rule "Receipt discount of 1% for silver and gold"
+	when 
+		receipt: Receipt()
+		profile: Profile(category.name == 'GOLD' || category.name == 'SILVER')
+	then
+		receipt.addDiscount(new ReceiptDiscount(receipt.getCode() + receipt.getDiscounts().size(), receipt, 1.0, false));
+	end
+	
+
+	
+rule "Sum all receipt discounts"
+	when 
+		receipt : Receipt(id == id)
+	then
+		for(ReceiptDiscount discount : receipt.getDiscounts()) {
+			receipt.setDiscountPercentage(receipt.getDiscountPercentage() + Double.parseDouble(discount.getPercentage().toString()));
+		}
+end
+
+rule "Calculate receipt final prize"
+	when 
+		receipt : Receipt(id == id)
+	then
+		Double finalPrize = 0.0;
+		for(ReceiptItem item : receipt.getItems()) {
+			finalPrize += item.getFinalTotalPrize();
+		}
+		receipt.setFinalPrize(finalPrize - finalPrize*receipt.getDiscountPercentage()*0.01);
+end
+
+rule "Check amount"
+	when 
+		receipt : Receipt(id == id)
+	then
+		Double finalPrize = 0.0;
+		for(ReceiptItem item : receipt.getItems()) {
+			finalPrize += item.getFinalTotalPrize();
+		}
+		receipt.setFinalPrize(finalPrize - finalPrize*receipt.getDiscountPercentage()*0.01);
+end
+
+		
+	

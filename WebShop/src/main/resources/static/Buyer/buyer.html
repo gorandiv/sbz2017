@@ -1,0 +1,28 @@
+<div class="container-fluid">
+	<header>
+		<nav class="navbar navbar-inverse">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" style="cursor:pointer" ng-click="view = ''">Buyer Page</a>
+				</div>
+
+				<ul class="nav navbar-nav">
+					<li><a style="cursor:pointer" ng-click="view = 'shop'"><i class="fa fa-home"></i> Shop </a></li>
+					<li><a style="cursor:pointer" ng-click="view = 'history'"><i class="fa fa-shield"></i>
+							Receipt history</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a style="cursor:pointer" ng-click="view = 'profile'"><span
+							class="glyphicon glyphicon-user"></span> Profile</a></li>
+					<li><a style="cursor:pointer" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+	<div ng-switch="view">
+		<div ng-switch-when="shop"><div ng-include="'WebShop/Buyer/shop.html'"></div></div>
+		<div ng-switch-when="history"><div ng-include="'WebShop/Buyer/history.html'"></div></div>
+		<div ng-switch-when="profile"><div ng-include="'WebShop/Buyer/profile.html'"></div></div>
+	</div>
+
+</div>

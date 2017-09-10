@@ -1,0 +1,24 @@
+package rules;
+	
+import webshop.entity.Product	
+
+	
+rule "Product refill not needed"
+	when 
+		product : Product(quantity >= minimumQuantity)
+	then
+		product.setRefillNeeded(false);
+		product.setRefillReason("");
+end
+
+rule "Product refill needed"
+	when 
+		product : Product(quantity < minimumQuantity)
+	then
+		product.setRefillNeeded(true);
+		product.setRefillReason("Quantity of products is below minimum.");
+end	
+
+
+		
+	

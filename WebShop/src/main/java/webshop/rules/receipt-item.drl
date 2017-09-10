@@ -1,0 +1,111 @@
+package rules;
+
+import java.util.Calendar
+import java.util.Date
+import java.text.SimpleDateFormat
+import webshop.entity.Receipt;
+import webshop.entity.ReceiptItem;
+import webshop.entity.ReceiptItemDiscount;
+import webshop.entity.Product;
+import webshop.entity.ProductCategory;
+import webshop.entity.ActionSale;
+
+function boolean checkDate(String date, int numberOfDays) {
+	Calendar calendar = Calendar.getInstance(); 
+	calendar.add(Calendar.DAY_OF_MONTH, numberOfDays);
+	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	if(date != null && !sdf.parse(date).before(calendar.getTime())) {
+		return true;
+	}
+  	return false;
+}
+
+function boolean compareDates(String date1, String date2) {
+	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	if(!sdf.parse(date1).before(sdf.parse(date2))) {
+		return true;
+	}
+  	return false;
+}
+
+	
+rule "Basic discount of 10%"
+	when 
+		receiptItem: ReceiptItem(amount > 20 && product.category.code != "1234")
+		eval(receiptItem.getDiscounts().size() == 0)
+	then
+		receiptItem.addDiscount(new ReceiptItemDiscount(receiptItem.getProduct().getCode() + receiptItem.getDiscounts().size(), receiptItem, 10.0, true));
+	end
+	
+rule "Basic discount of 7%"
+	when 
+		receiptItem: ReceiptItem(originalTotalPrize > 5000 && product.category.code == "1234")
+		eval(receiptItem.getDiscounts().size() == 0)
+	then
+		receiptItem.addDiscount(new ReceiptItemDiscount(receiptItem.getProduct().getCode() + receiptItem.getDiscounts().size(), receiptItem, 7.0, true));
+	end
+	
+rule "Basic discount of 5%"
+	when 
+		receiptItem: ReceiptItem(amount > 5 && (product.category.code == "123a" || product.category.code == "123b" || product.category.code == "123c"))
+		 eval(receiptItem.getDiscounts().size() == 0)
+	then
+		receiptItem.addDiscount(new ReceiptItemDiscount(receiptItem.getProduct().getCode() + receiptItem.getDiscounts().size(), receiptItem, 5.0, true));
+	end
+	
+rule "Additional discount of 2%"
+	when
+		receiptItem : ReceiptItem()
+		eval(checkDate(receiptItem.getProduct().getLastPurchaseDate(), -15))
+	then
+		receiptItem.addDiscount(new ReceiptItemDiscount(receiptItem.getProduct().getCode() + receiptItem.getDiscounts().size(), receiptItem, 2.0, false));
+end
+
+rule "Additional discount of 1%"
+	when
+		receiptItem : ReceiptItem()
+		eval(checkDate(receiptItem.getProduct().getCategory().getLastPurchaseDate(), -30))
+	then
+		receiptItem.addDiscount(new ReceiptItemDiscount(receiptItem.getProduct().getCode() + receiptItem.getDiscounts().size(), receiptItem, 1.0, false));
+end
+
+rule "Additional discount based on action sales"
+	when
+		receiptItem : ReceiptItem()
+		actionSale : ActionSale(productCategories : productCategories) 
+		ProductCategory(id == receiptItem.product.category.id || (receiptItem.product.category.parentCategory != null && receiptItem.product.category.parentCategory.id == id)) from productCategories
+		eval(compareDates(receiptItem.getReceipt().getDate(), actionSale.getStartDate()))
+		eval(compareDates(actionSale.getEndDate(), receiptItem.getReceipt().getDate()))
+	then
+		receiptItem.addDiscount(new ReceiptItemDiscount(receiptItem.getProduct().getCode() + receiptItem.getDiscounts().size(), receiptItem, actionSale.getDiscountPercentage(), false));
+end
+
+rule "Sum all discounts"
+	when 
+		receiptItem : ReceiptItem(id == id)
+	then
+		for(int i = 0; i < receiptItem.getDiscounts().size(); i++) {
+			receiptItem.setDiscountPercentage(receiptItem.getDiscountPercentage() + Double.parseDouble(receiptItem.getDiscounts().get(i).getPercentage().toString()));
+		}
+end
+	
+
+rule "Set discount to maximum if over"
+	when
+		receiptItem : ReceiptItem()
+		eval(receiptItem.getDiscountPercentage() > Double.parseDouble(receiptItem.getProduct().getCategory().getMaximumDiscount().toString()))
+	then
+		receiptItem.setDiscountPercentage(Double.parseDouble(receiptItem.getProduct().getCategory().getMaximumDiscount().toString()));
+end
+
+rule "Calculate final prize"
+	when 
+		receiptItem : ReceiptItem(id == id)
+	then
+		receiptItem.setFinalTotalPrize(receiptItem.getProductPrize() * receiptItem.getAmount() - receiptItem.getProductPrize() * receiptItem.getAmount() * receiptItem.getDiscountPercentage()*0.01);
+end
+
+
+
+		
+	

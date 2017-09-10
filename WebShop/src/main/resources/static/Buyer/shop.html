@@ -1,0 +1,244 @@
+<div ng-controller="shopCtrl">
+
+	<div class="page-header">
+		<h1>Shop</h1>
+	</div>
+	<div class="row justify-content-center">
+		<button class="btn btn-success col-md-2" data-toggle="collapse"
+			data-target="#searchProducts">
+			<span class="glyphicon glyphicon-chevron-down"></span> Search
+			products
+		</button>
+		<button class="btn btn-success col-md-2"
+			data-toggle="modal" data-target="#cartModal">Cart</button>
+	</div>
+	<div id="searchProducts" class="collapse">
+		<hr />
+		<div class="form-row">
+			<div class="form-group col-md-6">
+				<label for="code" class="control-label"> Product code: </label> <input
+					type="text" class="form-control" id="code"
+					ng-model="productSearch.code" placeholder="Enter code">
+			</div>
+			<div class="form-group col-md-6">
+				<label for="name" class="control-label"> Product name: </label> <input
+					type="text" class="form-control" id="name"
+					ng-model="productSearch.name" placeholder="Enter name">
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="form-group col-md-6">
+				<label for="category" class="control-label"> Product
+					category: </label> <select class="form-control"
+					ng-options="category.id as category.name for category in categories"
+					ng-model="productSearch.categoryId">
+					<option style="background-color: #ccc" value="">Choose
+						category</option>
+				</select>
+			</div>
+			<div class="form-group col-md-4">
+				<label for="from" class="control-label"> Prize from: </label> <input
+					type="number" min="0" max="100000" class="form-control" id="from"
+					ng-model="productSearch.from">
+			</div>
+			<div class="form-group col-md-2">
+				<label for="to" class="control-label"> Prize to: </label> <input
+					type="number" min="1" max="1000000" class="form-control" id="to"
+					ng-model="productSearch.to">
+			</div>
+		</div>
+		<div class="row">
+			<button type="button" class="btn btn-success pull-left col-md-2"
+				ng-click="searchProducts()">Search</button>
+		</div>
+		<hr />
+	</div>
+	<div ng-repeat="product in products track by $index">
+		<div class="panel panel-success col-md-4">
+			<div class="panel-heading">{{product.name}}</div>
+				<div class="panel-body">
+					<h3>
+						<b>Code: </b> {{product.code}}
+					</h3>
+					<h3>
+						<b>Category: </b> {{product.category.name}}
+					</h3>
+					<h3>
+						<b>Prize: </b> {{product.prize}}
+					</h3>
+					<h3>
+						<b>Quantity: </b> {{product.quantity}}
+					</h3>
+					<hr />
+					<h3>
+						<b>Action sales:</b>
+					</h3>
+					<div ng-repeat="actionSale in actionSales">
+						<div ng-if="isThisProductOnActionSale(actionSale, product)">
+							<h3>
+								<b> Code:</b> {{actionSale.code}}, <b> Name:</b>
+								{{actionSale.name}}, <b> From:</b> {{actionSale.startDate}}, <b>
+									To:</b> {{actionSale.endDate}}, <b> Discount:</b> {{actionSale.discountPercentage}}
+							</h3>
+						</div>
+					</div>
+				</div>
+			<div class="panel-footer">
+				<div class="row">
+					<div class="form-group">
+						<div class="col-md-6">
+							<label for="amount" class="control-label"> Amount: </label> <input
+								type="number" min="1" max="1000000" class="form-control"
+								id="amount" ng-model="data.amounts[$index]"
+								ng-init="data.amounts[$index]=1">
+						</div>
+						<div class="col-md-6">
+							<button type="button" class="btn btn-success pull-right"
+								ng-click="addProductToCart(product, data.amounts[$index])"
+								ng-disabled="productsToShow.hasOwnProperty(product.id)">
+								<span class="glyphicon glyphicon-shopping-cart"></span> Add to
+								cart
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div id="cartModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Cart</h4>
+				</div>
+				<div class="modal-body">
+
+					<div ng-repeat="(key, value) in productsToShow">
+						<hr />
+						<button type="button" class="close" aria-label="Close"
+							ng-click="removeProductFromCart(key)">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h3>
+							<b>Code: </b> {{value.code}} <b>
+						</h3>
+						<h3>
+							<b>Name: </b> {{value.name}} <b>
+						</h3>
+						<h3>
+							<b>Amount: </b> {{value.amount}} <b>
+						</h3>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success pull-left"
+						ng-click="createReceipt()" ng-disabled="isEmpty(productsToShow)"
+						data-dismiss="modal">Create receipt</button>
+					<button type="button" class="btn btn-danger pull-right"
+						data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<div id="receiptModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Receipt</h4>
+				</div>
+				<div class="modal-body" style="height: 250px; overflow-y: auto;">
+					<h4>
+						<b>Receipt code: </b> {{receipt.code}}
+					</h4>
+					<h4>
+						<b>Receipt date: </b> {{receipt.date}}
+					</h4>
+					<h4>
+						<b>Original prize:</b> {{receipt.originalPrize}}
+					</h4>
+					<h4>
+						<b>Discount percentage:</b> {{receipt.discountPercentage}}
+					</h4>
+					<h4>
+						<b>Final prize:</b> {{receipt.finalPrize}}
+					</h4>
+					<div ng-repeat="item in receipt.items">
+						<div class="pull-right">
+							<b>Item {{$index + 1}}</b>
+						</div>
+						<hr />
+						<h4>
+							<b>Product:</b> {{item.product.name}}
+						</h4>
+						<h4>
+							<b>Product prize:</b> {{item.productPrize}}
+						</h4>
+						<h4>
+							<b>Amount:</b> {{item.amount}}
+						</h4>
+						<h4>
+							<b>Original total prize:</b> {{item.originalTotalPrize}}
+						</h4>
+						<h4>
+							<b>Discount percentage:</b> {{item.discountPercentage}}
+						</h4>
+						<h4>
+							<b>Final total prize:</b> {{item.finalTotalPrize}}
+						</h4>
+						<div ng-repeat="discount in item.discounts">
+							<div class="pull-right">
+								<b>Discount {{$index + 1}}</b>
+							</div>
+							<hr />
+							<h4>
+								<b>Code:</b> {{discount.code}}
+							</h4>
+							<h4>
+								<b>Percentage:</b> {{discount.percentage}}
+							</h4>
+							<h4>
+								<b>Regular:</b> {{discount.regular}}
+							</h4>
+						</div>
+					</div>
+
+					<div ng-repeat="discount in receipt.discounts">
+						<div class="pull-right">
+							<b>Receipt discount {{$index + 1}}</b>
+						</div>
+						<hr />
+						<h4>
+							<b>Code:</b> {{discount.code}}
+						</h4>
+						<h4>
+							<b>Percentage:</b> {{discount.percentage}}
+						</h4>
+						<h4>
+							<b>Regular:</b> {{discount.regular}}
+						</h4>
+
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="form-group">
+						<label> Use reward points: </label>
+						<input type="number" min="0" max="{{profile.rewardPoints}}"
+							class="form-control" id="rewardPoints" ng-model="rewardPoints">
+					</div>
+					<button type="button" class="btn btn-success pull-left"
+						ng-click="makePurchase()" data-dismiss="modal">Purchase</button>
+					<button type="button" class="btn btn-danger pull-right"
+						data-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</div>

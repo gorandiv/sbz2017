@@ -1,0 +1,98 @@
+<div ng-controller="productCategoryCtrl">
+
+	<div class="page-header">
+		<h1>Product categories</h1>
+	</div>
+
+	<ul class="nav nav-tabs">
+		<li class="active"><a role="tab" data-toggle="tab" href="#create">Create</a></li>
+		<li><a role="tab" data-toggle="tab" href="#edit">Edit</a></li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="create" class="tab-pane fade in active">
+			<hr />
+			<div class="form-row">
+				<div class="form-group col-md-6">
+					<label for="code" class="control-label"> Code: </label> <input
+						type="text" class="form-control" id="code" ng-model="category.code"
+						placeholder="Enter code">
+				</div>
+	
+				<div class="form-group col-md-6">
+					<label for="name" class="control-label"> Name: </label> <input
+						type="text" class="form-control" id="name" ng-model="category.name"
+						placeholder="Enter name">
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group col-md-6">
+					<label> Parent category: </label> <select class="form-control"
+						ng-options="category as category.name for category in categories track by category.id"
+						ng-model="category.parentCategory">
+						<option style="background-color: #ccc" value="">Choose
+							category</option>
+					</select>
+				</div>
+	
+				<div class="form-group col-md-6">
+					<label for="maximumDiscount" class="control-label"> Maximum
+						discount: </label> <input type="number" min="0" max="100"
+						class="form-control" id="maximumDiscount"
+						ng-model="category.maximumDiscount">
+				</div>
+			</div>
+			<div>
+				<button class="btn btn-success col-md-2" ng-click="createProductCategory()">Create</button>
+			</div>
+
+		</div>
+		<div id="edit" class="tab-pane fade">
+			<hr />
+			<div class="form-group">
+				<label> Product category: </label> <select class="form-control"
+					ng-options="category as category.name for category in categories"
+					ng-model="editCategory">
+					<option style="background-color: #ccc" value="">Choose category</option>
+				</select>
+			</div>
+			<div ng-show="editCategory != null">
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label for="editCode" class="control-label"> Code: </label> 
+						<input type="text" class="form-control" id="editCode" ng-model="editCategory.code" placeholder="Enter code" readonly>
+					</div>
+	
+					<div class="form-group col-md-6">
+						<label for="editName" class="control-label"> Name: </label> <input
+							type="text" class="form-control" id="editName"
+							ng-model="editCategory.name" placeholder="Enter name">
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label> Parent category: </label> 
+						<select class="form-control" ng-options="category as category.name for category in categories track by category.id"
+							ng-model="editCategory.parentCategory">
+							<option style="background-color: #ccc" value="">Choose category</option>
+						</select>
+					</div>
+	
+					<div class="form-group col-md-6">
+						<label for="editMaximumDiscount" class="control-label">
+							Maximum discount: </label> <input type="number" min="0" max="100"
+							class="form-control" id="editMaximumDiscount"
+							ng-model="editCategory.maximumDiscount">
+					</div>
+				</div>
+				<div>
+					<button class="btn btn-success col-md-2" ng-click="saveChanges()">Save
+						changes</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+</div>
