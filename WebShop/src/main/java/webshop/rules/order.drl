@@ -2,7 +2,7 @@ package rules;
 	
 import webshop.entity.Product	
 
-	
+//Ako je brojno stanje artikla manje od minimalnog, postavi naznaku u artiklu.	
 rule "Product refill not needed"
 	when 
 		product : Product(quantity >= minimumQuantity)

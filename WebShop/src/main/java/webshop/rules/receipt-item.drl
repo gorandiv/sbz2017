@@ -28,7 +28,7 @@ function boolean compareDates(String date1, String date2) {
   	return false;
 }
 
-	
+/*osnovni popust od 10% za stavku ukoliko se u njoj narucuje vise od 20 artikala, a artikal ne pripada kategoriji siroke potrosnje	*/
 rule "Basic discount of 10%"
 	when 
 		receiptItem: ReceiptItem(amount > 20 && product.category.code != "1234")
@@ -36,7 +36,8 @@ rule "Basic discount of 10%"
 	then
 		receiptItem.addDiscount(new ReceiptItemDiscount(receiptItem.getProduct().getCode() + receiptItem.getDiscounts().size(), receiptItem, 10.0, true));
 	end
-	
+
+//osnovni popust od 7% za stavku ukoliko ukupna narucena vrijednost stavke prelazi 5000 i ukoliko njen artikal pripada kategoriji siroke potrosnje
 rule "Basic discount of 7%"
 	when 
 		receiptItem: ReceiptItem(originalTotalPrize > 5000 && product.category.code == "1234")
@@ -45,6 +46,8 @@ rule "Basic discount of 7%"
 		receiptItem.addDiscount(new ReceiptItemDiscount(receiptItem.getProduct().getCode() + receiptItem.getDiscounts().size(), receiptItem, 7.0, true));
 	end
 	
+	
+//osnovni popust od 5% za stavku ukoliko se u njoj narucuje vise od 5 artikala, a artikal pripada kategoriji, televizori, racunari ili laptopovi	
 rule "Basic discount of 5%"
 	when 
 		receiptItem: ReceiptItem(amount > 5 && (product.category.code == "123a" || product.category.code == "123b" || product.category.code == "123c"))
@@ -52,7 +55,8 @@ rule "Basic discount of 5%"
 	then
 		receiptItem.addDiscount(new ReceiptItemDiscount(receiptItem.getProduct().getCode() + receiptItem.getDiscounts().size(), receiptItem, 5.0, true));
 	end
-	
+
+//dodatni popust od 2% za stavku ukoliko je artikal iz stavke vec kupovan u prethodnih 15 dana	
 rule "Additional discount of 2%"
 	when
 		receiptItem : ReceiptItem()
@@ -61,6 +65,7 @@ rule "Additional discount of 2%"
 		receiptItem.addDiscount(new ReceiptItemDiscount(receiptItem.getProduct().getCode() + receiptItem.getDiscounts().size(), receiptItem, 2.0, false));
 end
 
+//dodatni popust od 1%  za stavku ukoliko su proizvodi iz kategorije tog artikla kupovani u prethodnih 30 dana
 rule "Additional discount of 1%"
 	when
 		receiptItem : ReceiptItem()
@@ -69,6 +74,7 @@ rule "Additional discount of 1%"
 		receiptItem.addDiscount(new ReceiptItemDiscount(receiptItem.getProduct().getCode() + receiptItem.getDiscounts().size(), receiptItem, 1.0, false));
 end
 
+//Ukoliko datum narudzbenice pripada nekom vremenskom periodu akcijskog dogadjaja i ukoliko za artikal iz stavke njegova kategorija pripada listi kategorija za koje se akcijski događaj definiše, tada kreiraj dodatni popust za stavku. 
 rule "Additional discount based on action sales"
 	when
 		receiptItem : ReceiptItem()
@@ -79,7 +85,7 @@ rule "Additional discount based on action sales"
 	then
 		receiptItem.addDiscount(new ReceiptItemDiscount(receiptItem.getProduct().getCode() + receiptItem.getDiscounts().size(), receiptItem, actionSale.getDiscountPercentage(), false));
 end
-
+//Za stavku računa saberi sve popuste (osnovni + svi dodatni) koji su za nju definisani.
 rule "Sum all discounts"
 	when 
 		receiptItem : ReceiptItem(id == id)

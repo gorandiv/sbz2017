@@ -5,6 +5,10 @@ import webshop.entity.Profile;
 import webshop.entity.ConsumptionThreshold;
 import java.lang.Math;
 
+
+/*Na osnovu konačne cene računa i kategorija kupca identifikuj prag potrošnje kupca. 
+Iz identifikovanog praga preuzmi procentualnu vrednost i primeni je na plaćenu cenu računa. 
+Dobijeni broj zaokruži i upiši kao nove akcijske bodove u računu.*/
 rule "Profile points acquiring"
 	when 
 		receipt: Receipt()

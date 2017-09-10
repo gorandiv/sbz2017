@@ -62,13 +62,13 @@ INSERT INTO buyer_category_consumption_thresholds(buyer_category_id, consumption
 VALUES(3, 9);
 
 INSERT INTO sys_user(id, username, password, name, last_name, registration_date, user_type) 
-VALUES(1, 'b', 'b', 'Goran', 'Divovic', '03/07/2017', 'BUYER');
+VALUES(1, 'b', 'b', 'Goran', 'Divovic', '19/08/2015', 'BUYER');
 
 INSERT INTO buyer_profile(id, delivery_address, reward_points, category_id, buyer_id)
 VALUES(1, 'Brace Krkljus 1, Novi Sad', 50, 2, 1);
 
 INSERT INTO sys_user(id, username, password, name, last_name, registration_date, user_type) 
-VALUES(2, 's', 's', 'Nikola', 'Smiljanic', '04/07/2017', 'SALESMAN');
+VALUES(2, 's', 's', 'Nikola', 'Smiljanic', '04/08/2017', 'SALESMAN');
 
 INSERT INTO sys_user(id, username, password, name, last_name, registration_date, user_type) 
 VALUES(3, 'm', 'm', 'Milan', 'Adamovic', '06/07/2017', 'MANAGER');
@@ -98,10 +98,10 @@ INSERT INTO product_category(id, product_category_code, parent_category_id, prod
 VALUES(8, '1234', null, 'Product of wide consumption', 10);
 
 INSERT INTO product(id, product_code, product_name, category_id, prize, quantity, minimum_quantity, date_noted, refill_needed, active)
-VALUES(1, '23133', 'TV Grundig 213', 3, 20000, 5, 2, '07/10/2017', false, true);
+VALUES(1, '23133', 'TV FOX 12a', 3, 20000, 5, 2, '07/10/2017', false, true);
 
 INSERT INTO product(id, product_code, product_name, category_id, prize, quantity, minimum_quantity, date_noted, refill_needed, active)
-VALUES(2, '2313a3', 'TV Samsung a', 3, 35000, 10, 5, '07/09/2016', false, true);
+VALUES(2, '2313a3', 'TV Samsung 1a', 3, 35000, 10, 5, '07/09/2016', false, true);
 
 INSERT INTO product(id, product_code, product_name, category_id, prize, quantity, minimum_quantity, date_noted, refill_needed, active)
 VALUES(3, '43133', 'Assus x5ly', 4, 40000, 10, 5, '06/10/2017', false, true);
@@ -110,7 +110,7 @@ INSERT INTO product(id, product_code, product_name, category_id, prize, quantity
 VALUES(4, '2c133', 'TV 421412', 3, 20000, 3, 7, '07/10/2017', true, true);
 
 INSERT INTO product(id, product_code, product_name, category_id, prize, quantity, minimum_quantity, date_noted, refill_needed, active)
-VALUES(5, '22133', 'TV aa', 3, 20000, 3, 7, '07/10/2017', false, false);
+VALUES(5, '22133', 'TV hdX', 3, 20000, 3, 7, '07/10/2017', false, false);
 
 INSERT INTO product(id, product_code, product_name, category_id, prize, quantity, minimum_quantity, date_noted, refill_needed, active)
 VALUES(6, '231ddc', 'Green salad', 8, 50, 125, 20, '07/10/2017', false, true);
